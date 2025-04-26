@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZdLink Converter</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    h2 {
+      font-size: 1.5em;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1em;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+    }
+    #output {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      word-break: break-all;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<h2>ZdLink Converter (Shift -2 Letters)</h2>
+
+<input type="text" id="originalLink" placeholder="Paste your original link here">
+<button onclick="convertLink()">Convert Link</button>
+
+<div id="output"></div>
+
+<script>
+function shiftChar(c) {
+  if (c >= 'A' && c <= 'Z') {
+    return String.fromCharCode(((c.charCodeAt(0) - 65 - 2 + 26) % 26) + 65);
+  }
+  if (c >= 'a' && c <= 'z') {
+    return String.fromCharCode(((c.charCodeAt(0) - 97 - 2 + 26) % 26) + 97);
+  }
+  return c; // leave digits/symbols unchanged
+}
+
+function convertLink() {
+  const input = document.getElementById('originalLink').value.trim();
+  const outputDiv = document.getElementById('output');
+
+  try {
+    const parts = input.split('/');
+    const idPart = parts[4]; // The 2nd number in the path
+    const uCode = parts[parts.length - 1]; // Code after /u/
+
+    let shifted = '';
+    for (let i = 0; i < uCode.length; i++) {
+      shifted += shiftChar(uCode[i]);
+    }
+
+    const newLink = `https://zdisk.xyz/m?=g${idPart}/u/${shifted}`;
+    outputDiv.innerHTML = `<a href="${newLink}" target="_blank">${newLink}</a>`;
+  } catch (err) {
+    outputDiv.innerText = "Invalid link format. Please try again.";
+  }
+}
+</script>
+
+</body>
+</html>
